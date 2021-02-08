@@ -6,15 +6,16 @@ import (
 )
 
 // SearchAccount gets tweets for a given search query, via the Twitter frontend API
-func (s *Scraper) SearchAccount(query string, maxResult int, cursor string) (TwitterGlobal, error) {
+func (s *Scraper) SearchAccount(query string, maxResult int, cursor string) ([]TwAccount, error) {
 	query = url.PathEscape(query)
 	if maxResult > 40 {
 		maxResult = 40
 	}
+	acc := make([]TwAccount, 0)
 
 	req, err := s.newRequest("GET", "https://twitter.com/i/api/2/search/adaptive.json")
 	if err != nil {
-		return TwitterGlobal{}, err
+		return acc, err
 	}
 
 	q := req.URL.Query()
@@ -30,11 +31,15 @@ func (s *Scraper) SearchAccount(query string, maxResult int, cursor string) (Twi
 
 	req.URL.RawQuery = q.Encode()
 
-	var timeline TwitterGlobal
-	err = s.RequestAPI(req, &timeline)
+	glob := TwitterGlobal{}
+	err = s.RequestAPI(req, &glob)
 	if err != nil {
-		return TwitterGlobal{}, err
+		return acc, err
 	}
 
-	return timeline, nil
+	for _, val := range glob.GlobalObjects.Users {
+		acc = append(acc, val)
+	}
+
+	return acc, nil
 }

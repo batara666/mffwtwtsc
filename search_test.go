@@ -13,7 +13,7 @@ func TestGetSearchTweets(t *testing.T) {
 	a := New()
 	p, err := a.SearchAccount("joko widodo", maxResult, "")
 	log.Println(err)
-	spew.Dump(p.GlobalObjects.Users)
+	spew.Dump(p)
 
 	if count != maxResult {
 		t.Errorf("Expected tweets count=%v, got: %v", maxResult, count)
