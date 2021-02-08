@@ -52,6 +52,8 @@ func (s *Scraper) RequestAPI(req *http.Request, target interface{}) error {
 	if resp.Header.Get("X-Rate-Limit-Remaining") == "0" {
 		s.guestToken = ""
 	}
+	// bodyBytes, err := ioutil.ReadAll(resp.Body)
+	// ioutil.WriteFile("acc.json", bodyBytes, 0644)
 
 	return json.NewDecoder(resp.Body).Decode(target)
 }

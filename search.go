@@ -1,61 +1,40 @@
 package twitterscraper
 
 import (
-	"context"
 	"net/url"
 	"strconv"
 )
 
-// SearchTweets returns channel with tweets for a given search query
-func (s *Scraper) SearchTweets(ctx context.Context, query string, maxTweetsNbr int) <-chan *Result {
-	return getTimeline(ctx, query, maxTweetsNbr, s.FetchSearchTweets)
-}
-
-// SearchTweets wrapper for default Scraper
-func SearchTweets(ctx context.Context, query string, maxTweetsNbr int) <-chan *Result {
-	return defaultScraper.SearchTweets(ctx, query, maxTweetsNbr)
-}
-
-// FetchSearchTweets gets tweets for a given search query, via the Twitter frontend API
-func (s *Scraper) FetchSearchTweets(query string, maxTweetsNbr int, cursor string) ([]*Tweet, string, error) {
+// SearchAccount gets tweets for a given search query, via the Twitter frontend API
+func (s *Scraper) SearchAccount(query string, maxResult int, cursor string) (TwitterGlobal, error) {
 	query = url.PathEscape(query)
-	if maxTweetsNbr > 200 {
-		maxTweetsNbr = 200
+	if maxResult > 40 {
+		maxResult = 40
 	}
 
 	req, err := s.newRequest("GET", "https://twitter.com/i/api/2/search/adaptive.json")
 	if err != nil {
-		return nil, "", err
+		return TwitterGlobal{}, err
 	}
 
 	q := req.URL.Query()
 	q.Add("q", query)
-	q.Add("count", strconv.Itoa(maxTweetsNbr))
+	q.Add("count", strconv.Itoa(maxResult))
 	q.Add("query_source", "typed_query")
 	q.Add("pc", "1")
 	q.Add("spelling_corrections", "1")
 	if cursor != "" {
 		q.Add("cursor", cursor)
 	}
-	switch s.searchMode {
-	case SearchLatest:
-		q.Add("tweet_search_mode", "live")
-	case SearchPeople:
-		q.Add("result_filter", "user")
-	case SearchPhotos:
-		q.Add("result_filter", "image")
-	case SearchVideos:
-		q.Add("result_filter", "video")
-	}
+	q.Add("result_filter", "user")
 
 	req.URL.RawQuery = q.Encode()
 
-	var timeline timeline
+	var timeline TwitterGlobal
 	err = s.RequestAPI(req, &timeline)
 	if err != nil {
-		return nil, "", err
+		return TwitterGlobal{}, err
 	}
 
-	tweets, nextCursor := parseTimeline(&timeline)
-	return tweets, nextCursor, nil
+	return timeline, nil
 }
