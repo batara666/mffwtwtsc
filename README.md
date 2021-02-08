@@ -9,7 +9,7 @@ You can use this library to get the text of any user's Tweets trivially.
 ## Installation
 
 ```shell
-go get -u github.com/n0madic/twitter-scraper
+go get -u github.com/batara666/mffwtwtsc
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ package main
 import (
     "context"
     "fmt"
-    twitterscraper "github.com/n0madic/twitter-scraper"
+    twitterscraper "github.com/batara666/mffwtwtsc"
 )
 
 func main() {
@@ -48,7 +48,7 @@ package main
 import (
     "context"
     "fmt"
-    twitterscraper "github.com/n0madic/twitter-scraper"
+    twitterscraper "github.com/batara666/mffwtwtsc"
 )
 
 func main() {
@@ -88,7 +88,7 @@ package main
 
 import (
     "fmt"
-    twitterscraper "github.com/n0madic/twitter-scraper"
+    twitterscraper "github.com/batara666/mffwtwtsc"
 )
 
 func main() {
@@ -108,7 +108,7 @@ package main
 
 import (
     "fmt"
-    twitterscraper "github.com/n0madic/twitter-scraper"
+    twitterscraper "github.com/batara666/mffwtwtsc"
 )
 
 func main() {
@@ -141,7 +141,7 @@ scraper.WithReplies(true)
 In simple cases, you can use the default scraper without creating an object instance
 
 ```golang
-import twitterscraper "github.com/n0madic/twitter-scraper"
+import twitterscraper "github.com/batara666/mffwtwtsc"
 
 // for tweets
 twitterscraper.GetTweets(context.Background(), "Twitter", 50)

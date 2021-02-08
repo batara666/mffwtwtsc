@@ -1,4 +1,4 @@
-module github.com/n0madic/twitter-scraper
+module github.com/batara666/mffwtwtsc
 
 go 1.13
 
